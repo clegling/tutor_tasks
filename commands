@@ -1,0 +1,96 @@
+#include <arpa/inet.h>
+#include <signal.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/types.h>
+
+
+// Файлы
+int open(const char *path, int oflag, ...);
+int close(int fildes);
+ssize_t read(int fildes, void *buf, size_t nbyte);
+ssize_t write(int fildes, const void *buf, size_t nbyte);
+off_t lseek(int fildes, off_t offset, int whence);
+
+// Процессы
+void _exit(int status);
+void exit(int status);
+pid_t wait(int *status);
+pid_t waitpid(pid_t pid, int *stat_loc, int options);
+int execl(const char *path, char *arg0, ..., char *argn, 0);
+pid_t fork(void);
+
+// Неименованные каналы
+int pipe(int *fd);
+int dup(int fildes);
+int dup2(int fildes, int fildes2);
+
+//  Именованные каналы
+int mkfifo (char *pathname, mode_t mode);
+
+// Нити
+int pthread_create(pthread_t *tid, const pthread_attr_t *attr, void* (*start)(void *), void *arg);
+int pthread_equal(pthread_t tid1, pthread_t tid2);
+pthread_t pthread_self(void);
+void pthread_exit(void *val_ptr);
+int pthread_join(pthread_t tid, void** val_ptr);
+int pthread_cancel(pthread_t tid);
+
+// Сигналы
+
+void (*signal ( int sig, void (*func) (int))) (int);
+unsigned int alarm(unsigned int seconds);
+int kill(pid_t pid, int sig);
+int sigprocmask(int how, const sigset_t *set, sigset_t *old_set);
+int sigaction(int sig, const struct sigaction *act, struct *oact);
+
+
+// Очереди сообщений
+
+key_t ftok(char *filename, char proj);
+int msgget(key_t key, int msgflag);
+int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg); 
+int msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+int msgctl(int msqid, int cmd, struct msgid_ds *buf);
+
+// Разделяемая память
+int shmget (key_t key, int size, int shmflg);
+char *shmat(int shmid, char *shmaddr, int shmflg);
+int shmdt(char *shmaddr);
+int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+
+// Семафоры
+int semget (key_t key, int nsems, int semflag);
+int semop (int semid, struct sembuf *semop, size_t nops);
+int semctl (int semid, int num, int cmd, union semun arg);
+
+struct sembuf {
+  short sem_num;
+  short sem_op;
+  short sem_flg; 
+};
+
+// Сокеты
+int socket (int domain, int type, int protocol);
+int bind (int sockfd, struct sockaddr *myaddr, int addrlen);
+int connect (int sockfd, struct sockaddr *serv_addr, int addrlen);
+int listen (int sockfd, int backlog);
+int accept (int sockfd, struct sockaddr *addr, int *addrlen);
+int send(int sockfd, const void *msg, int len, unsigned int flags);
+int recv(int sockfd, void *buf, int len, unsigned int flags);
+int sendto(int sockfd, const void *msg, int len, unsigned int flags, const struct sockaddr *to, int tolen);
+int recvfrom(int sockfd, void *buf, int len, unsigned int flags, struct sockaddr *from, int *fromlen);
+int shutdown (int sockfd, int mode);
+
+struct sockaddr {
+    sa_family_t     sa_family;
+    char            sa_data[];
+};
+
+// Мьютексы
+int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+
